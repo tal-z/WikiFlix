@@ -26,9 +26,9 @@ async def screenshots(title):
 figure, ax = plt.subplots()
 plt.ion()
 
-async def main():
+async def main(title):
     count = 0
-    async for i in screenshots('Little_Red_Lighthouse'):
+    async for i in screenshots(title):
         print(count)
         count += 1
         MAX_SIZE = (500, 500)
@@ -39,5 +39,5 @@ async def main():
         figure.canvas.flush_events()
         plt.show()
 
-
-asyncio.run(main())
+title = 'Little_Red_Lighthouse'
+asyncio.run(main(title=title))
