@@ -4,6 +4,7 @@ import requests
 def get_revision_ids(title):
     base_url = "http://en.wikipedia.org/w/api.php"
     revision_list = []
+    ts_list = []
     ## first API call
     while not revision_list:
         parameters = {'action': 'query',
@@ -25,12 +26,15 @@ def get_revision_ids(title):
         revisions = page_info['revisions']
 
         for entry in revisions:
+            print(entry)
             revision_list.append(entry['revid'])
+            ts_list.append(entry['timestamp'])
 
         ## next series of passes, until you're done.
         else:
             while str(len(revisions)) == parameters['rvlimit']:
                 start_id = revision_list[-1]
+                print(start_id)
 
                 parameters = {'action': 'query',
                               'format': 'json',
@@ -53,5 +57,10 @@ def get_revision_ids(title):
                 revisions = page_info['revisions']
 
                 for entry in revisions[1:]:
+                    print(entry)
                     revision_list.append(entry['revid'])
-    return revision_list
+                    ts_list.append(entry['timestamp'])
+
+                    #timestamp_list.append()
+    print(revision_list, ts_list)
+    return revision_list, ts_list
