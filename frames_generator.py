@@ -20,7 +20,7 @@ def screenshot(driver: webdriver.Chrome) -> bytes:
     driver.set_window_size(required_width, required_height)
     shot = driver.get_screenshot_as_png()
     im = make_horizontal(Image.open(io.BytesIO(shot)))
-    im.thumbnail((500,500))
+    #im.thumbnail((im.width, 500))
     bytes = io.BytesIO()
     im.save(bytes, format='PNG')
     driver.set_window_size(original_size['width'], original_size['height'])

@@ -7,13 +7,13 @@ app = Flask(__name__)
 def index():
     print("hit route")
     # Return the result on the web
-    return Response('hello world')
+    return render_template('index.html')
 
 
 @app.route('/wiki_feed')
 def wiki_feed():
     # Return the result on the web
-    return Response(screenshots('Little Red Lighthouse'),
+    return Response(screenshots('compost'),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 if __name__ == '__main__':

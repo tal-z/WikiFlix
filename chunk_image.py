@@ -1,6 +1,6 @@
 from PIL import Image
 
-def make_horizontal(image, max_chunk_size=1000):
+def make_horizontal(image, max_chunk_size=2000):
     # use floor division to get number of chunks
     # use modulus to get size of remainder
     # the remainder counts as an extra chunk.
