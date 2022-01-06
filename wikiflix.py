@@ -1,5 +1,4 @@
 import asyncio
-import copy
 import io
 
 from pyppeteer import launch
@@ -7,6 +6,7 @@ from PIL import Image
 import matplotlib.pyplot as plt
 
 from wikipedia import get_revision_ids
+from chunk_image import make_horizontal
 
 
 async def screenshots(title):
@@ -21,7 +21,7 @@ async def screenshots(title):
         full_url = snapshot_url + page_id_param
         await page.goto(full_url)
         shot = await page.screenshot({'fullPage': True})
-        image = Image.open(io.BytesIO(shot))
+        image = make_horizontal(Image.open(io.BytesIO(shot)), max_chunk_size=2000)
         yield image, ts
     await browser.close()
 
@@ -30,22 +30,19 @@ figure, ax = plt.subplots()
 plt.ion()
 
 
-
 async def main(title):
-    count = 0
-    async for i, ts in screenshots(title):
-        print(count, ts)
-        count += 1
-        print(i.size)
+    async for im, ts in screenshots(title):
         MAX_SIZE = (500, 500)
-        i.thumbnail(MAX_SIZE)
-        print(i.size)
+        im.thumbnail(MAX_SIZE)
         ax.clear()
+        ax.get_xaxis().set_visible(False)
+        ax.get_yaxis().set_visible(False)
         plt.title(ts)
-        plt.imshow(i)
+        plt.imshow(im)
         figure.canvas.draw()
         figure.canvas.flush_events()
         plt.show()
 
-title = 'Little Red Lighthouse'
-asyncio.run(main(title=title))
+
+def play(title):
+    asyncio.run(main(title=title))
