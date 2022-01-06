@@ -7,13 +7,15 @@ def get_revision_ids(title):
     ts_list = []
     ## first API call
     while not revision_list:
-        parameters = {'action': 'query',
-                      'format': 'json',
-                      'continue': '',
-                      'titles': title,
-                      'prop': 'revisions',
-                      'rvprop': 'ids|userid|timestamp',
-                      'rvlimit': '500'}
+        parameters = {
+            'action': 'query',
+            'format': 'json',
+            'continue': '',
+            'titles': title,
+            'prop': 'revisions',
+            'rvprop': 'ids|userid|timestamp',
+            'rvlimit': '500',
+        }
 
         wp_call = requests.get(base_url, params=parameters)
         response = wp_call.json()
@@ -26,7 +28,6 @@ def get_revision_ids(title):
         revisions = page_info['revisions']
 
         for entry in revisions:
-            print(entry)
             revision_list.append(entry['revid'])
             ts_list.append(entry['timestamp'])
 
@@ -34,17 +35,17 @@ def get_revision_ids(title):
         else:
             while str(len(revisions)) == parameters['rvlimit']:
                 start_id = revision_list[-1]
-                print(start_id)
 
-                parameters = {'action': 'query',
-                              'format': 'json',
-                              'continue': '',
-                              'titles': title,
-                              'prop': 'revisions',
-                              'rvprop': 'ids|userid|timestamp',
-                              'rvlimit': '500',
-                              'rvstartid': start_id,
-                              }
+                parameters = {
+                    'action': 'query',
+                    'format': 'json',
+                    'continue': '',
+                    'titles': title,
+                    'prop': 'revisions',
+                    'rvprop': 'ids|userid|user|timestamp',
+                    'rvlimit': '500',
+                    'rvstartid': start_id,
+                }
 
                 wp_call = requests.get(base_url, params=parameters)
                 response = wp_call.json()
@@ -61,6 +62,4 @@ def get_revision_ids(title):
                     revision_list.append(entry['revid'])
                     ts_list.append(entry['timestamp'])
 
-                    #timestamp_list.append()
-    print(revision_list, ts_list)
     return revision_list, ts_list
